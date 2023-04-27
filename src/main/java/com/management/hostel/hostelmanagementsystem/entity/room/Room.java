@@ -28,11 +28,18 @@ public class Room {
 	@Column(name="capacity",nullable=false)
 	private int capacity;
 	
-	@Column(name="food_preference",nullable=false)
-	private String foodPreference;
+	@Column(name="includes_ac",nullable=false)
+	private boolean includesAc;
+	
 	
 	@Column(name="status",nullable=false)
 	private String status;
+	
+	@Column(name="vacancy",nullable=false)
+	private int vacancy;
+	
+	@Column(name="student_ids")
+	private List<Long> studentIds;
 	
 	@OneToMany(mappedBy ="room",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	private List<Student> students;
@@ -55,13 +62,7 @@ public class Room {
 		this.capacity = capacity;
 	}
 
-	public String getFoodPreference() {
-		return foodPreference;
-	}
-
-	public void setFoodPreference(String foodPreference) {
-		this.foodPreference = foodPreference;
-	}
+	
 
 	public String getStatus() {
 		return status;
@@ -77,6 +78,30 @@ public class Room {
 
 	public void setStudents(List<Student> students) {
 		this.students = students;
+	}
+
+	public boolean getIncludesAc() {
+		return includesAc;
+	}
+
+	public void setIncludesAc(boolean includesAc) {
+		this.includesAc = includesAc;
+	}
+
+	public int getVacancy() {
+		return vacancy;
+	}
+
+	public void setVacancy(int vacancy) {
+		this.vacancy = vacancy;
+	}
+
+	public List<Long> getStudentIds() {
+		return studentIds;
+	}
+
+	public void setStudentIds(long id) {
+		this.studentIds.add(id);
 	}
 	 
 	

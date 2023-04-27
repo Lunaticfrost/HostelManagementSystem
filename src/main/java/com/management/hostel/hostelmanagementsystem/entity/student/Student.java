@@ -29,11 +29,17 @@ public class Student {
 	@Column(name ="phone", nullable=false)
 	private String phone;
 	
+	@Column(name="food_preference",nullable=false)
+	private String foodPreference;
+	
 	@Column(name ="parent_name", nullable=false)
 	private String parentName;
 	
 	@Column(name ="parent_email", nullable=false)
 	private String parentPhone;
+	
+	@Column(name="room_type",nullable= false)
+	private int roomType;
 	
 	@ManyToOne(fetch=FetchType.LAZY, optional= false)
 	@JoinColumn(name="room_id",nullable = false)
@@ -41,14 +47,19 @@ public class Student {
 
 	
 	
-	public Student(String name, String email, String phone, String parentName, String parentPhone, Room room) {
+	public Student(String name, String email, String phone,String foodPreference, String parentName, String parentPhone, Room room) {
 		super();
 		this.name = name;
 		this.email = email;
 		this.phone = phone;
+		this.foodPreference = foodPreference;
 		this.parentName = parentName;
 		this.parentPhone = parentPhone;
 		this.room = room;
+	}
+
+	public Long getId() {
+		return id;
 	}
 
 	public String getName() {
@@ -74,6 +85,14 @@ public class Student {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
+	
+	public String getFoodPreference() {
+		return foodPreference;
+	}
+
+	public void setFoodPreference(String foodPreference) {
+		this.foodPreference = foodPreference;
+	}
 
 	public String getParentName() {
 		return parentName;
@@ -97,6 +116,14 @@ public class Student {
 
 	public void setRoom(Room room) {
 		this.room = room;
+	}
+
+	public int getRoomType() {
+		return roomType;
+	}
+
+	public void setRoomType(int roomType) {
+		this.roomType = roomType;
 	}
 	
 	

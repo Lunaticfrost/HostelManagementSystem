@@ -12,9 +12,13 @@ public interface RoomRepository extends JpaRepository<Room, Long>{
 	
 	Room findByRoomNumber(String roomNumber);
 	
-	List<Room> findByCapacityAndFoodPreferenceAndStatus(int capacity, String foodPreference, String status);
+	List<Room> findByCapacity(int capacity);
 
 	List<Room> findByStatus(String string);
+
+	List<Room> findByIncludesAc(boolean choice);
+
+	List<Room> findByCapacityAndStatus(int capacity, String string);
 	
 
 }
