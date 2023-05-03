@@ -20,14 +20,15 @@ public class RoomService {
 	public List<Room> getAvailableRooms() {
 		return roomRepository.findByStatus("available");
 	}
-	//to get rooms acc to capacity
+
+	// to get rooms acc to capacity
 	public List<Room> getRoomsAccordingToCapacity(int capacity) {
 		return roomRepository.findByCapacity(capacity);
 	}
-	
-	public List<Room> getAvailableRoomsAccordingToCapacity(int roomType){
-		return roomRepository.findByCapacityAndStatus(roomType,"available");
-		
+
+	public List<Room> getAvailableRoomsAccordingToCapacity(int roomType) {
+		return roomRepository.findByCapacityAndStatus(roomType, "available");
+
 	}
 
 	// to get room by id
@@ -41,26 +42,46 @@ public class RoomService {
 	}
 
 	// to allocateRoom
-	public void allocateRoom(Student student) {
-		List<Room> rooms = roomRepository.findByCapacityAndStatus(student.getRoomType(),"available");
+	public String allocateRoom(Student student) {
+		List<Room> rooms = roomRepository.findByCapacityAndStatus(student.getRoomType(), "available");
 		for (Room room : rooms) {
 			if (room.getVacancy() > 0) {
 				room.setVacancy(room.getVacancy() - 1);
 				room.setStudentIds(student.getId());
-				if(room.getVacancy()==0) {
+				if (room.getVacancy() == 0) {
 					room.setStatus("not available");
 				}
+				return room.getRoomNumber();
 			}
-			
+
 		}
+
+		return null;
 
 	}
 
 	// to release room
 	public void releaseRoom(Room room) {
 		room.setStatus("available");
+		room.setVacancy(room.getVacancy() + 1);
 		roomRepository.save(room);
 
 		room.getStudents().clear();
+	}
+
+	// to return room number
+	public String getRoomNumber(Long id) {
+
+		List<Room> rooms = roomRepository.findAll();
+
+		for (Room room : rooms) {
+			for (Long studentId : room.getStudentIds()) {
+				if (studentId == id) {
+					return room.getRoomNumber();
+				}
+			}
+		}
+		return null;
+
 	}
 }

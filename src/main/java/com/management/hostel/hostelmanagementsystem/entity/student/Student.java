@@ -47,7 +47,7 @@ public class Student {
 
 	
 	
-	public Student(String name, String email, String phone,String foodPreference, String parentName, String parentPhone, Room room) {
+	public Student(String name, String email, String phone,String foodPreference, String parentName, String parentPhone) {
 		super();
 		this.name = name;
 		this.email = email;
@@ -55,7 +55,6 @@ public class Student {
 		this.foodPreference = foodPreference;
 		this.parentName = parentName;
 		this.parentPhone = parentPhone;
-		this.room = room;
 	}
 
 	public Long getId() {
