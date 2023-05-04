@@ -1,5 +1,6 @@
 package com.management.hostel.hostelmanagementsystem.entity.student;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.management.hostel.hostelmanagementsystem.entity.room.Room;
 
 import jakarta.persistence.Column;
@@ -13,41 +14,47 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="students")
+@Table(name = "students")
 public class Student {
-	
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	
-	@Column(name ="name", nullable=false)
+
+	@Column(name = "name", nullable = false)
 	private String name;
-	
-	@Column(name ="email", nullable=false)
+
+	@Column(name = "email", nullable = false)
 	private String email;
-	
-	@Column(name ="phone", nullable=false)
+
+	@Column(name = "phone", nullable = false)
 	private String phone;
-	
-	@Column(name="food_preference",nullable=false)
+
+	@Column(name = "food_preference", nullable = false)
 	private String foodPreference;
-	
-	@Column(name ="parent_name", nullable=false)
+
+	@Column(name = "parent_name", nullable = false)
 	private String parentName;
-	
-	@Column(name ="parent_email", nullable=false)
+
+	@Column(name = "parent_email", nullable = false)
 	private String parentPhone;
-	
-	@Column(name="room_type",nullable= false)
+
+	@Column(name = "room_type", nullable = false)
 	private int roomType;
-	
-	@ManyToOne(fetch=FetchType.LAZY, optional= false)
-	@JoinColumn(name="room_id",nullable = false)
+
+	@Column(name = "room_number")
+	private String roomNumber;
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "room_id", nullable = false)
 	private Room room;
 
-	
-	
-	public Student(String name, String email, String phone,String foodPreference, String parentName, String parentPhone) {
+	public Student() {
+		super();
+	}
+
+	public Student(String name, String email, String phone, String foodPreference, String parentName,
+			String parentPhone) {
 		super();
 		this.name = name;
 		this.email = email;
@@ -55,6 +62,13 @@ public class Student {
 		this.foodPreference = foodPreference;
 		this.parentName = parentName;
 		this.parentPhone = parentPhone;
+	}
+
+	@Override
+	public String toString() {
+		return String.format(
+				"Student [id=%s, name=%s, email=%s, phone=%s, foodPreference=%s, parentName=%s, parentPhone=%s, roomType=%s, roomNumber=%s, room=%s]",
+				id, name, email, phone, foodPreference, parentName, parentPhone, roomType, roomNumber, room);
 	}
 
 	public Long getId() {
@@ -84,7 +98,7 @@ public class Student {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	
+
 	public String getFoodPreference() {
 		return foodPreference;
 	}
@@ -109,6 +123,7 @@ public class Student {
 		this.parentPhone = parentPhone;
 	}
 
+	@JsonBackReference
 	public Room getRoom() {
 		return room;
 	}
@@ -124,6 +139,13 @@ public class Student {
 	public void setRoomType(int roomType) {
 		this.roomType = roomType;
 	}
-	
-	
+
+	public String getRoomNumber() {
+		return roomNumber;
+	}
+
+	public void setRoomNumber(String roomNumber) {
+		this.roomNumber = roomNumber;
+	}
+
 }
