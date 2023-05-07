@@ -2,6 +2,7 @@ package com.management.hostel.hostelmanagementsystem.entity.room;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.management.hostel.hostelmanagementsystem.entity.student.Student;
 
 import jakarta.persistence.CascadeType;
@@ -15,36 +16,52 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="rooms")
+@Table(name = "rooms")
 public class Room {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@Column(name="room_number",nullable=false,unique=true)
+
+	@Column(name = "room_number", nullable = false, unique = true)
 	private String roomNumber;
-	
-	@Column(name="capacity",nullable=false)
+
+	@Column(name = "capacity", nullable = false)
 	private int capacity;
-	
-	@Column(name="includes_ac",nullable=false)
+
+	@Column(name = "includes_ac", nullable = false)
 	private boolean includesAc;
-	
-	
-	@Column(name="status",nullable=false)
+
+	@Column(name = "status", nullable = false)
 	private String status;
-	
-	@Column(name="vacancy",nullable=false)
+
+	@Column(name = "vacancy", nullable = false)
 	private int vacancy;
-	
-	@Column(name="student_ids")
-	private List<Long> studentIds;
-	
-	@OneToMany(mappedBy ="room",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+
+	@OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Student> students;
-	
-	
+
+	public Room() {
+		super();
+	}
+
+	public Room(String roomNumber, int capacity, boolean includesAc, String status, int vacancy,
+			List<Student> students) {
+		super();
+		this.roomNumber = roomNumber;
+		this.capacity = capacity;
+		this.includesAc = includesAc;
+		this.status = status;
+		this.vacancy = vacancy;
+		this.students = students;
+	}
+
+	@Override
+	public String toString() {
+		return String.format(
+				"Room [id=%s, roomNumber=%s, capacity=%s, includesAc=%s, status=%s, vacancy=%s, students=%s]", id,
+				roomNumber, capacity, includesAc, status, vacancy, students);
+	}
 
 	public String getRoomNumber() {
 		return roomNumber;
@@ -62,8 +79,6 @@ public class Room {
 		this.capacity = capacity;
 	}
 
-	
-
 	public String getStatus() {
 		return status;
 	}
@@ -72,6 +87,7 @@ public class Room {
 		this.status = status;
 	}
 
+	@JsonManagedReference
 	public List<Student> getStudents() {
 		return students;
 	}
@@ -95,16 +111,5 @@ public class Room {
 	public void setVacancy(int vacancy) {
 		this.vacancy = vacancy;
 	}
-
-	public List<Long> getStudentIds() {
-		return studentIds;
-	}
-
-	public void setStudentIds(long id) {
-		this.studentIds.add(id);
-	}
-	 
-	
-	
 
 }

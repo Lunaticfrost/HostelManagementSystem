@@ -28,8 +28,8 @@ public class StudentService {
 		return studentRepository.save(student);
 	}
 	
-	public void deleteStudent(Student student) {
-		studentRepository.delete(student);
+	public void deleteStudent(long id) {
+		studentRepository.deleteById(id);;
 	}
 	
 }

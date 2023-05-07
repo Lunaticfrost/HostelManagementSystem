@@ -3,18 +3,28 @@ package com.management.hostel.hostelmanagementsystem.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.management.hostel.hostelmanagementsystem.entity.room.Room;
 import com.management.hostel.hostelmanagementsystem.entity.student.Student;
+import com.management.hostel.hostelmanagementsystem.exceptions.RoomUnavailableException;
 import com.management.hostel.hostelmanagementsystem.repository.RoomRepository;
+import com.management.hostel.hostelmanagementsystem.repository.StudentRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class RoomService {
 
+	private static Logger log = Logger.getLogger(RoomService.class);
+
 	@Autowired
 	private RoomRepository roomRepository;
+
+	@Autowired
+	private StudentRepository studentRepository;
 
 	// to get all rooms
 	public List<Room> getAvailableRooms() {
@@ -42,25 +52,56 @@ public class RoomService {
 	}
 
 	// to allocateRoom
+	@Transactional
 	public String allocateRoom(Student student) {
-		List<Room> rooms = roomRepository.findByCapacityAndStatus(student.getRoomType(), "available");
+		List<Room> rooms = roomRepository.findByStatus("available");
+		log.info("Got rooms form list....");
+
 		for (Room room : rooms) {
-			if (room.getVacancy() > 0) {
-				room.setVacancy(room.getVacancy() - 1);
-				room.setStudentIds(student.getId());
-				if (room.getVacancy() == 0) {
-					room.setStatus("not available");
-				}
-				return room.getRoomNumber();
+			log.info("Got individual room form list....");
+			String roomNumber = fillStudentsInVacantRooms(room, student);
+			log.info("Got roomNumber from \"fillStudentsInVacantRoom\" method form list....");
+			if (roomNumber != null) {
+				log.info("Inside allocateRoom before return statement....");
+				return roomNumber;
 			}
-
 		}
-
-		return null;
+		
+		log.info("Inside allocateRoom before throw exception....");
+		throw new RoomUnavailableException("Rooms not available!!");
 
 	}
 
+	@Transactional
+	public String fillStudentsInVacantRooms(Room room, Student student) {
+		log.info("Inside fillStudentsInVacantRooms....");
+		int vacancy = room.getVacancy();
+		if (vacancy != 0) {
+			log.info("Inside fillStudentsInVacantRooms if block....");
+			room.setVacancy(vacancy - 1);
+			student.setRoom(room);
+			log.info("Inside fillStudentsInVacantRooms if block BEFORE SAVE....");
+			
+			log.info("Inside fillStudentsInVacantRooms if block BEFORE setRoomNumber call....");
+			student.setRoomNumber(room.getRoomNumber());
+			log.info("Inside fillStudentsInVacantRooms if block AFTER setRoomNumber call....");
+			
+			studentRepository.save(student);
+			log.info("Inside fillStudentsInVacantRooms if block AFTER SAVE....");
+			if (vacancy == 0) {
+				room.setStatus("not available");
+				log.info("Inside fillStudentsInVacantRooms NESTED if block....");
+			}
+			log.info("Inside fillStudentsInVacantRooms if block after NESTED IF block....");
+			log.info("Before return statement.........");
+
+			return room.getRoomNumber();
+		}
+		return null;
+	}
+
 	// to release room
+	@Transactional
 	public void releaseRoom(Room room) {
 		room.setStatus("available");
 		room.setVacancy(room.getVacancy() + 1);
@@ -71,17 +112,18 @@ public class RoomService {
 
 	// to return room number
 	public String getRoomNumber(Long id) {
-
-		List<Room> rooms = roomRepository.findAll();
-
-		for (Room room : rooms) {
-			for (Long studentId : room.getStudentIds()) {
-				if (studentId == id) {
-					return room.getRoomNumber();
-				}
-			}
-		}
-		return null;
+		Student student = studentRepository.getReferenceById(id);
+		return student.getRoomNumber();
 
 	}
+
+	// Add a list of rooms by admins
+	public void addListOfRooms(List<Room> rooms) {
+		roomRepository.saveAll(rooms);
+	}
+
+	public List<Room> getAllRooms() {
+		return roomRepository.findAll();
+	}
+
 }
