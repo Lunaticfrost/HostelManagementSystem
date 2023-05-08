@@ -36,7 +36,7 @@ public class Student {
 	@Column(name = "parent_name", nullable = false)
 	private String parentName;
 
-	@Column(name = "parent_email", nullable = false)
+	@Column(name = "parent_phone", nullable = false)
 	private String parentPhone;
 
 	@Column(name = "room_type", nullable = false)
@@ -54,7 +54,7 @@ public class Student {
 	}
 
 	public Student(String name, String email, String phone, String foodPreference, String parentName,
-			String parentPhone) {
+			String parentPhone, int roomType) {
 		super();
 		this.name = name;
 		this.email = email;
@@ -62,6 +62,7 @@ public class Student {
 		this.foodPreference = foodPreference;
 		this.parentName = parentName;
 		this.parentPhone = parentPhone;
+		this.roomType = roomType;
 	}
 
 	@Override

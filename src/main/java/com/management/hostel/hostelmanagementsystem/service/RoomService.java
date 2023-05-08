@@ -51,6 +51,10 @@ public class RoomService {
 		return roomRepository.findByIncludesAc(true);
 	}
 
+	public Room getRoomByRoomNumber(String roomNumber) {
+		return roomRepository.findByRoomNumber(roomNumber);
+	}
+	
 	// to allocateRoom
 	@Transactional
 	public String allocateRoom(Student student) {
@@ -88,7 +92,7 @@ public class RoomService {
 			
 			studentRepository.save(student);
 			log.info("Inside fillStudentsInVacantRooms if block AFTER SAVE....");
-			if (vacancy == 0) {
+			if (room.getVacancy() == 0) {
 				room.setStatus("not available");
 				log.info("Inside fillStudentsInVacantRooms NESTED if block....");
 			}

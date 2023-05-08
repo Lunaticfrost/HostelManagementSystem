@@ -37,7 +37,7 @@ public class StudentController {
 	@PostMapping("/students")
 	public ResponseEntity<String> addStudent(@RequestBody StudentDTO studentDTO) {
 		Student student = new Student(studentDTO.getName(), studentDTO.getEmail(), studentDTO.getPhone(),
-				studentDTO.getFoodPreference(), studentDTO.getParentName(), studentDTO.getParentPhone());
+				studentDTO.getFoodPreference(), studentDTO.getParentName(), studentDTO.getParentPhone(),studentDTO.getRoomType());
 		student.setRoom(null);
 		student.setRoomNumber(null);
 		String roomNumber = roomService.allocateRoom(student);

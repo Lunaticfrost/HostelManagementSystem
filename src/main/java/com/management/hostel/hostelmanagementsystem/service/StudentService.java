@@ -14,22 +14,27 @@ public class StudentService {
 
 	@Autowired
 	private StudentRepository studentRepository;
-	
-	public Optional<Student> getStudentById(Long id){
+
+	@Autowired
+	private RoomService roomService;
+
+	public Optional<Student> getStudentById(Long id) {
 		return studentRepository.findById(id);
 	}
-	
-	public List<Student> getAllStudents(){
+
+	public List<Student> getAllStudents() {
 		return studentRepository.findAll();
-		
+
 	}
-	
+
 	public Student saveStudent(Student student) {
 		return studentRepository.save(student);
 	}
-	
+
 	public void deleteStudent(long id) {
-		studentRepository.deleteById(id);;
+		Student student = getStudentById(id).get();
+		roomService.releaseRoom(roomService.getRoomByRoomNumber(student.getRoomNumber()));
+		studentRepository.deleteById(id);
 	}
-	
+
 }
