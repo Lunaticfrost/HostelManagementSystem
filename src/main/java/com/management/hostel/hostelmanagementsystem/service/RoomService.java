@@ -59,19 +59,14 @@ public class RoomService {
 	@Transactional
 	public String allocateRoom(Student student) {
 		List<Room> rooms = roomRepository.findByStatus("available");
-		log.info("Got rooms form list....");
 
 		for (Room room : rooms) {
-			log.info("Got individual room form list....");
 			String roomNumber = fillStudentsInVacantRooms(room, student);
-			log.info("Got roomNumber from \"fillStudentsInVacantRoom\" method form list....");
 			if (roomNumber != null) {
-				log.info("Inside allocateRoom before return statement....");
 				return roomNumber;
 			}
 		}
 		
-		log.info("Inside allocateRoom before throw exception....");
 		throw new RoomUnavailableException("Rooms not available!!");
 
 	}
@@ -81,23 +76,16 @@ public class RoomService {
 		log.info("Inside fillStudentsInVacantRooms....");
 		int vacancy = room.getVacancy();
 		if (vacancy != 0) {
-			log.info("Inside fillStudentsInVacantRooms if block....");
 			room.setVacancy(vacancy - 1);
 			student.setRoom(room);
-			log.info("Inside fillStudentsInVacantRooms if block BEFORE SAVE....");
 			
-			log.info("Inside fillStudentsInVacantRooms if block BEFORE setRoomNumber call....");
 			student.setRoomNumber(room.getRoomNumber());
-			log.info("Inside fillStudentsInVacantRooms if block AFTER setRoomNumber call....");
 			
 			studentRepository.save(student);
-			log.info("Inside fillStudentsInVacantRooms if block AFTER SAVE....");
 			if (room.getVacancy() == 0) {
 				room.setStatus("not available");
-				log.info("Inside fillStudentsInVacantRooms NESTED if block....");
 			}
-			log.info("Inside fillStudentsInVacantRooms if block after NESTED IF block....");
-			log.info("Before return statement.........");
+			
 
 			return room.getRoomNumber();
 		}
