@@ -41,7 +41,11 @@ public class Student {
 
 	@Column(name = "room_type", nullable = false)
 	private int roomType;
+	
+	@Column(name = "requires_Ac", nullable = false)
+	private boolean requiresAc;
 
+	
 	@Column(name = "room_number")
 	private String roomNumber;
 
@@ -54,7 +58,7 @@ public class Student {
 	}
 
 	public Student(String name, String email, String phone, String foodPreference, String parentName,
-			String parentPhone, int roomType) {
+			String parentPhone, int roomType, boolean requiresAc) {
 		super();
 		this.name = name;
 		this.email = email;
@@ -63,13 +67,14 @@ public class Student {
 		this.parentName = parentName;
 		this.parentPhone = parentPhone;
 		this.roomType = roomType;
+		this.requiresAc = requiresAc;
 	}
 
 	@Override
 	public String toString() {
 		return String.format(
-				"Student [id=%s, name=%s, email=%s, phone=%s, foodPreference=%s, parentName=%s, parentPhone=%s, roomType=%s, roomNumber=%s, room=%s]",
-				id, name, email, phone, foodPreference, parentName, parentPhone, roomType, roomNumber, room);
+				"Student [id=%s, name=%s, email=%s, phone=%s, foodPreference=%s, parentName=%s, parentPhone=%s, roomType=%s,requiresAc=%s roomNumber=%s, room=%s]",
+				id, name, email, phone, foodPreference, parentName, parentPhone, roomType,requiresAc, roomNumber, room);
 	}
 
 	public Long getId() {
@@ -140,6 +145,15 @@ public class Student {
 	public void setRoomType(int roomType) {
 		this.roomType = roomType;
 	}
+	
+	public boolean isRequiresAc() {
+		return requiresAc;
+	}
+
+	public void setRequiresAc(boolean requiresAc) {
+		this.requiresAc = requiresAc;
+	}
+
 
 	public String getRoomNumber() {
 		return roomNumber;

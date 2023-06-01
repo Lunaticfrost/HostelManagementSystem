@@ -12,12 +12,13 @@ public class StudentDTO {
 	private String parentName;
 	private String parentPhone;
 	private int roomType;
+	private boolean includeAc;
 
 	@Override
 	public String toString() {
 		return "StudentDTO [name=" + name + ", email=" + email + ", phone=" + phone + ", foodPreference="
 				+ foodPreference + ", parentName=" + parentName + ", parentPhone=" + parentPhone + ", roomType="
-				+ roomType + "]";
+				+ roomType +", includeAC="+ includeAc + "]";
 	}
 
 	public StudentDTO() {
@@ -25,7 +26,7 @@ public class StudentDTO {
 	}
 
 	public StudentDTO(String name, String email, String phone, String foodPreference, String parentName,
-			String parentPhone, int roomType) {
+			String parentPhone, int roomType, boolean includeAc) {
 		super();
 		this.name = name;
 		this.email = email;
@@ -34,6 +35,7 @@ public class StudentDTO {
 		this.parentName = parentName;
 		this.parentPhone = parentPhone;
 		this.roomType = roomType;
+		this.includeAc = includeAc;
 	}
 
 	public String getName() {
@@ -90,6 +92,14 @@ public class StudentDTO {
 
 	public void setRoomType(int roomType) {
 		this.roomType = roomType;
+	}
+
+	public boolean isIncludeAc() {
+		return includeAc;
+	}
+
+	public void setIncludeAc(boolean includeAc) {
+		this.includeAc = includeAc;
 	}
 
 }

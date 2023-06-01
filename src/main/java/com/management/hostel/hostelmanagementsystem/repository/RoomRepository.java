@@ -20,5 +20,7 @@ public interface RoomRepository extends JpaRepository<Room, Long>{
 
 	List<Room> findByCapacityAndStatus(int capacity, String string);
 	
+	List<Room> findByCapacityAndStatusAndIncludesAc(int capacity, String string, boolean includesAc);
+	
 
 }

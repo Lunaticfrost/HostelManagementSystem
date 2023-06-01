@@ -41,6 +41,11 @@ public class RoomService {
 
 	}
 
+	public List<Room> getAvailableRoomsAccordingToCapacityAndAcPreference(int roomType, boolean includeAc) {
+		return roomRepository.findByCapacityAndStatusAndIncludesAc(roomType, "available", includeAc);
+
+	}
+
 	// to get room by id
 	public Optional<Room> getRoomById(Long id) {
 		return roomRepository.findById(id);
@@ -54,11 +59,13 @@ public class RoomService {
 	public Room getRoomByRoomNumber(String roomNumber) {
 		return roomRepository.findByRoomNumber(roomNumber);
 	}
-	
+
 	// to allocateRoom
 	@Transactional
 	public String allocateRoom(Student student) {
-		List<Room> rooms = roomRepository.findByStatus("available");
+		boolean requiresAc = student.isRequiresAc();
+		List<Room> rooms = roomRepository.findByCapacityAndStatusAndIncludesAc(student.getRoomType(), "available",
+				requiresAc);
 
 		for (Room room : rooms) {
 			String roomNumber = fillStudentsInVacantRooms(room, student);
@@ -66,7 +73,7 @@ public class RoomService {
 				return roomNumber;
 			}
 		}
-		
+
 		throw new RoomUnavailableException("Rooms not available!!");
 
 	}
@@ -78,14 +85,13 @@ public class RoomService {
 		if (vacancy != 0) {
 			room.setVacancy(vacancy - 1);
 			student.setRoom(room);
-			
+
 			student.setRoomNumber(room.getRoomNumber());
-			
+
 			studentRepository.save(student);
 			if (room.getVacancy() == 0) {
 				room.setStatus("not available");
 			}
-			
 
 			return room.getRoomNumber();
 		}

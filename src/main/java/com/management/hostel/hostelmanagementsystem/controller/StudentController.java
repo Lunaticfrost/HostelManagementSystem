@@ -39,7 +39,7 @@ public class StudentController {
 	@PostMapping("/add-student")
 	public ResponseEntity<String> addStudent(@RequestBody StudentDTO studentDTO) {
 		Student student = new Student(studentDTO.getName(), studentDTO.getEmail(), studentDTO.getPhone(),
-				studentDTO.getFoodPreference(), studentDTO.getParentName(), studentDTO.getParentPhone(),studentDTO.getRoomType());
+				studentDTO.getFoodPreference(), studentDTO.getParentName(), studentDTO.getParentPhone(),studentDTO.getRoomType(),studentDTO.isIncludeAc());
 		student.setRoom(null);
 		student.setRoomNumber(null);
 		String roomNumber = roomService.allocateRoom(student);
@@ -74,6 +74,42 @@ public class StudentController {
 	public ResponseEntity<String> deleteStudent(@RequestParam long id) {
 		studentService.deleteStudent(id);
 		return new ResponseEntity<String>("Deleted!!", HttpStatus.OK);
+	}
+	
+	@GetMapping("/total-rooms")
+	public ResponseEntity<Integer> getTotalRooms() {
+		List<Room> roomList = roomService.getAllRooms();
+		return new ResponseEntity<Integer>(roomList.size(), HttpStatus.OK);
+	}
+	
+	@GetMapping("/total-students")
+	public ResponseEntity<Integer> getTotalStudents() {
+		List<Student> studentList = studentService.getAllStudents();
+		return new ResponseEntity<Integer>(studentList.size(), HttpStatus.OK);
+	}
+	
+	@GetMapping("/available-rooms")
+	public ResponseEntity<Integer> getAvailableRooms() {
+		List<Room> availableRooms = roomService.getAvailableRooms() ;
+		return new ResponseEntity<Integer>(availableRooms.size(), HttpStatus.OK);
+	}
+	
+	@GetMapping("/filled-rooms")
+	public ResponseEntity<Integer> getFilledRooms() {
+		List<Room> roomList = roomService.getAllRooms();
+		List<Room> availableRooms = roomService.getAvailableRooms() ;
+		int filledRooms = roomList.size() - availableRooms.size();
+		return new ResponseEntity<Integer>(filledRooms, HttpStatus.OK);
+	}
+	
+	@GetMapping("/vacant-beds")
+	public ResponseEntity<Integer> getVacantBeds() {
+		List<Room> roomList = roomService.getAllRooms();
+		int vacant =0;
+		for(Room room: roomList) {
+			vacant += room.getVacancy();
+		}
+		return new ResponseEntity<Integer>(vacant, HttpStatus.OK);
 	}
 
 }
